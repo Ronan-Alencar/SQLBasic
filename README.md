@@ -226,3 +226,107 @@ AVG (StandardCost)
 FOR DaysToManufacture IN ([0], [1], [2], [3], [4])
 ) AS PivotTable;
 ```
+JOINS
+
+```SQL
+--JOIN
+
+--INNER JOIN
+
+SELECT
+ e.LoginID
+FROM HumanResources.Employee AS e
+INNER JOIN Sales.SalesPerson AS s
+ON e.BusinessEntityID = s.BusinessEntityID;
+
+--LEFT OUTER JOIN
+
+SELECT
+ p.Name,
+ pr.ProductReviewID
+FROM Production.Product P
+LEFT OUTER JOIN Production.ProductReview pr ON p.ProductID = pr.ProductID;
+
+--CROSS JOIN
+
+SELECT
+ p.BusinessEntityID,
+ t.Name AS Territory
+FROM Sales.SalesPerson p
+CROSS JOIN Sales.SalesTerritory t
+ORDER BY BusinessEntityID;
+
+--JOIN with 3 tables
+
+SELECT
+ p.Name,
+ v.Name
+FROM Production.Product p
+JOIN Purchasing.ProductVendor pv ON p.ProductID = pv.ProductID
+JOIN Purchasing.Vendor v ON pv.BusinessEntityID = v.BusinessEntityID
+WHERE ProductSubcategoryID = 15
+ORDER BY v.Name;
+
+--UNION, Unify the distinct lines
+
+SELECT
+ ProductId
+FROM Production.Product
+UNION
+SELECT
+ ProductID
+FROM Production.WorkOrder;
+
+--UNION ALL, unify all the lines
+
+SELECT
+ ProductId
+FROM Production.Product
+UNION ALL
+SELECT
+ ProductID
+FROM Production.WorkOrder;
+
+--EXCEPT
+
+SELECT
+ ProductId
+FROM Production.Product
+EXCEPT
+SELECT
+ ProductID
+FROM Production.WorkOrder;
+
+--INTERSECT
+
+SELECT
+ ProductId
+FROM Production.Product
+INTERSECT
+SELECT
+ ProductID
+FROM Production.WorkOrder;
+
+--TOP
+
+SELECT TOP (5)
+ FirstName,
+ LastName
+FROM Person.Person
+ORDER BY Person.FirstName;
+
+SELECT TOP 5 PERCENT
+ FirstName,
+ LastName
+FROM Person.Person
+ORDER BY Person.FirstName;
+
+--TABLESAMPLE, generates random sample
+
+SELECT
+ FirstName,
+ LastName
+FROM Person.Person
+TABLESAMPLE (5 PERCENT)
+ORDER BY Person.FirstName;
+```
