@@ -91,6 +91,7 @@ SELECT DISTINCT
 FROM Person.Person
 ORDER BY LastName, FirstName;
 ```
+
 AGGREGATE FUNCTIONS
 
 ```SQL
@@ -329,4 +330,87 @@ SELECT
 FROM Person.Person
 TABLESAMPLE (5 PERCENT)
 ORDER BY Person.FirstName;
+```
+
+SUBQUERIES/TEMP TABLES/CTEs
+
+```SQL
+--SUBQUERIES
+
+SELECT
+ ProductID,
+ Name
+FROM Production.Product
+WHERE Color NOT IN
+(SELECT Color
+FROM Production.Product
+WHERE ProductID = 5);
+
+SELECT
+ Name,
+ ListPrice,
+ (SELECT AVG (ListPrice) FROM Production.Product) AS Average,
+ ListPrice - (SELECT AVG (ListPrice) FROM Production.Product) AS Difference
+FROM Production.Product
+WHERE ProductSubcategoryID = 1;
+
+SELECT
+ Name,
+ ListPrice
+FROM Production.Product
+WHERE ListPrice >= SOME
+(SELECT MAX (ListPrice)
+ FROM Production.Product
+ GROUP BY ProductSubcategoryID);
+
+SELECT
+ Name,
+ ListPrice
+FROM Production.Product
+WHERE ListPrice >= ALL
+(SELECT MAX (ListPrice)
+ FROM Production.Product
+ GROUP BY ProductSubcategoryID);
+
+--EXISTS
+
+SELECT
+ Name
+FROM Production.Product
+WHERE EXISTS
+(SELECT *
+ FROM Production.ProductSubcategory
+ WHERE ProductSubcategoryID = Production.Product.ProductSubcategoryID
+ AND NAME = 'Wheels');
+
+--TEMPORARY TABLES
+
+--#StoreInfoLocal/##StoreInfoGlobal
+
+CREATE TABLE #StoreInfoLocal
+(
+EmployeeID INT,
+ManagerID INT,
+Num INT
+);
+
+INSERT INTO #StoreInfoLocal (EmployeeID, ManagerID, Num) VALUES (1, 2, 3);
+
+SELECT * FROM #StoreInfoLocal;
+
+DROP TABLE #StoreInfoLocal;
+
+--CTE
+
+WITH TopSales (SalesPerson, NumSales) AS
+ (SELECT SalesPersonID, COUNT(*)
+ FROM Sales.SalesOrderHeader
+ GROUP BY SalesPersonID)
+
+SELECT
+ LoginID,
+ NumSales
+FROM HumanResources.Employee e
+INNER JOIN TopSales ON TopSales.SalesPerson = e.BusinessEntityID
+ORDER BY NumSales DESC;
 ```
