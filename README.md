@@ -536,3 +536,27 @@ INNER JOIN Sales.SalesOrderHeader OrderHeader ON (Cust.CustomerID = OrderHeader.
 ORDER BY Cust.CustomerID
 FOR XML AUTO;
 ```
+VIEW
+
+```SQL
+-- VIEW
+
+SELECT
+ FirstName,
+ LastName,
+ PersonType
+FROM Person.Person;
+
+CREATE VIEW Person.vPerson AS
+SELECT
+ FirstName,
+ LastName,
+ PersonType
+FROM Person.Person
+GO
+ 
+SELECT *
+FROM Person.vPerson;
+
+DROP VIEW Person.vPerson;
+```
