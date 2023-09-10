@@ -488,3 +488,51 @@ ROLLBACK TRAN T1
 
 SELECT MAX(Bonus) FROM Sales.SalesPerson
 ```
+
+METADATA & XML
+
+```SQL
+--METADATA
+
+SELECT
+ name,
+ object_id,
+ type_desc
+FROM sys.tables;
+
+--INFORMATION_SCHEMA (ISO)
+
+SELECT
+ COLUMN_NAME
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = N'Product';
+
+--DMV
+
+SELECT
+ cpu_count,
+ sqlserver_start_time
+FROM sys.dm_os_sys_info;
+
+--SYSTEM STORED PROCEDURES
+
+EXEC sp_columns @table_name = N'Department',
+@table_owner = N'HumanResourcers'
+
+--SYSTEM FUNCTIONS
+
+SELECT
+ COLUMNPROPERTY (OBJECT_ID('Person.Person'), 'LastName', 'PRECISION') AS 'Column Length';
+
+--XML
+
+SELECT
+ Cust.CustomerID,
+ OrderHeader.SalesOrderID,
+ OrderHeader.Status,
+ Cust.PersonID
+FROM Sales.Customer Cust
+INNER JOIN Sales.SalesOrderHeader OrderHeader ON (Cust.CustomerID = OrderHeader.CustomerID)
+ORDER BY Cust.CustomerID
+FOR XML AUTO;
+```
