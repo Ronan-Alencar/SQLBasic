@@ -414,3 +414,77 @@ FROM HumanResources.Employee e
 INNER JOIN TopSales ON TopSales.SalesPerson = e.BusinessEntityID
 ORDER BY NumSales DESC;
 ```
+
+DML (INSERT, DELETE, UPDATE) & DTL (TRANSACTION, COMMIT, ROLLBACK)
+
+```SQL
+--INSERT
+
+INSERT INTO Production.UnitMeasure (UnitMeasureCode, Name, ModifiedDate) VALUES (N'F2', N'Square Feet', GETDATE());
+
+INSERT INTO Production.UnitMeasure
+VALUES (N'F3', N'Square Feet 3', GETDATE()),
+       (N'Y2', N'Square Yards', GETDATE());
+
+SELECT *
+FROM Production.UnitMeasure
+ORDER BY ModifiedDate DESC;
+
+--INSERT with Identity
+
+CREATE TABLE dbo.T1 (
+column_1 INT IDENTITY,
+column_2 VARCHAR (30)
+)
+GO
+
+INSERT INTO dbo.T1 VALUES ('Row #1');
+INSERT INTO dbo.T1 VALUES ('Row #2');
+GO
+
+SELECT * FROM dbo.T1;
+
+--SET IDENTITY, to manipulate the id column
+
+SET IDENTITY_INSERT dbo.T1 ON;
+GO
+
+INSERT INTO dbo.T1 (column_1, column_2) VALUES (-99, 'Explicity Identity');
+
+SELECT * FROM dbo.T1;
+
+--DELETE/TRUNCATE
+
+DELETE 
+FROM HumanResources.JobCandidate
+WHERE 'term'
+;
+
+TRUNCATE TABLE HumanResources.JobCandidate;
+
+--UPDATE, 'N' used to specify NCHAR, VARCHAR O NTEXT value
+
+UPDATE Sales.SalesPerson SET Bonus = 6000;
+
+UPDATE Production.Product
+SET Color = N'Metallic Red'
+WHERE Name LIKE N'Road-250%' AND Color = N'Red';
+
+SELECT *
+FROM Production.Product
+WHERE Name LIKE N'Road-250%'
+
+--TRANSACTION
+
+BEGIN TRAN T1
+
+SELECT MAX(Bonus) FROM Sales.SalesPerson
+
+UPDATE Sales.SalesPerson SET Bonus = 6000;
+
+SELECT MAX(Bonus) FROM Sales.SalesPerson
+
+ROLLBACK TRAN T1
+
+SELECT MAX(Bonus) FROM Sales.SalesPerson
+```
