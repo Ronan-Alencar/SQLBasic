@@ -559,5 +559,4 @@ SELECT *
 FROM Person.vPerson;
 
 DROP VIEW Person.vPerson;
-
 ```
